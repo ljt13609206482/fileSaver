@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/fileSaver1.js"></script>
+    <style>
+        .text{
+            width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .text p{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="text">
+    <h1>数据筛选程序</h1>
+    <textarea name="文本框" id="textValue" style="width: 500px;height: 500px;overflow: scroll;"></textarea>
+    <p><button id="btn">导出生成json文件</button></p>
+
+</div>
+
+
+<script>
+    $(function(){
+        var filterMsg=function(arr){
+            var newArr;
+            var list=[];
+            for(var i=0;i<arr.l.length;i++){
+                list.push({"ln":arr.l[i].ln,"st":arr.l[i].st});
+            }
+            var newList=[];
+            for(var j = 0; j < list.length; j++) {
+                for(var k = 0; k < list[j].st.length; k++) {
+                    newList.push ({
+                        "sid": list[j].st[k].sid,
+                        "n": list[j].st[k].n,
+                        "ln":list[j].ln,
+                        "media":[
+                            {"type":"智慧屏","count":6,"pic":"images/media/zhp.jpg"},
+                            {"type":"查询机","count":5,"pic":"images/media/cxj.jpg"}
+                        ]
+                    });
+                }
+            }
+            newArr={"i":arr.i,"s":arr.s,"st":newList};
+            return newArr;
+        };
+        $("#btn").click(function(){
+            var text=JSON.parse($("#textValue").val());//转换成JSON对象格式
+            var msg=filterMsg(text);
+            downloadTextFile(msg,"chengdu.json");
+        });
+        /**
+         * 下载文件
+         */
+        var downloadTextFile = function(data,name) {
+            var file = new File([JSON.stringify(data)], name, { type: "text/plain;charset=utf-8" });
+            saveAs(file);
+        };
+
+    })
+</script>
+</body>
+</html>
